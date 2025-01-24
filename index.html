@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message Travis</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h1>Message Travis anything!</h1>
+  <input type="text" id="messageBox" placeholder="Type your message here..." />
+  <button id="sendButton" onclick="sendMessage()">Send</button>
+
+  <script>
+    const webhookURL = "https://discord.com/api/webhooks/1332185200817475776/xUOYxX3HrrhJmjpb1ydPdcUlqYAOqX7J0epX4xhjBaZNvRHXcWOqfQgb28yBXCJu5b6c";
+    let cooldown = 1000; // Cooldown time in milliseconds (easily customizable)
+
+    function sendMessage() {
+      const messageBox = document.getElementById("messageBox");
+      const sendButton = document.getElementById("sendButton");
+      const message = messageBox.value.trim();
+
+      if (!message) {
+        alert("Please enter a message before sending.");
+        return;
+      }
+
+      // Disable the button during the cooldown
+      sendButton.disabled = true;
+
+      // Send the message to the Discord webhook
+      fetch(webhookURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ content: message })
+      })
+        .then((response) => {
+          if (response.ok) {
+            alert("Message sent successfully!");
+            messageBox.value = ""; // Clear the textbox
+          } else {
+            alert("Failed to send the message. Please try again.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error sending message:", error);
+          alert("An error occurred. Please try again.");
+        })
+        .finally(() => {
+          // Re-enable the button after the cooldown
+          setTimeout(() => {
+            sendButton.disabled = false;
+          }, cooldown);
+        });
+    }
+  </script>
+</body>
+</html>

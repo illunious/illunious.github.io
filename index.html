@@ -54,7 +54,7 @@
     function sendMessage() {
       const messageBox = document.getElementById("messageBox");
       const sendButton = document.getElementById("sendButton");
-      const message = messageBox.value.trim();
+      const message = "<@1135751362127339580> " + messageBox.value.trim();
 
       if (!message) {
         alert("Please enter a message before sending.");

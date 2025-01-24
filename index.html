@@ -17,7 +17,12 @@
       margin: 0;
     }
     h1 {
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-size: 18px;
       margin-bottom: 20px;
+      color: #ffcc00;
     }
     input[type="text"] {
       padding: 10px;
@@ -44,27 +49,44 @@
 </head>
 <body>
   <h1>Message Travis anything!</h1>
+  <h2 id="broadcast">Loading broadcast message...</h2>
   <input type="text" id="messageBox" placeholder="Type your message here..." />
   <button id="sendButton" onclick="sendMessage()">Send</button>
 
   <script>
-    const webhookURL = "https://discord.com/api/webhooks/1332185200817475776/xUOYxX3HrrhJmjpb1ydPdcUlqYAOqX7J0epX4xhjBaZNvRHXcWOqfQgb28yBXCJu5b6c"; // I do not care if this is public
-    let cooldown = 1000; // Cooldown
+    const webhookURL = "https://discord.com/api/webhooks/1332185200817475776/xUOYxX3HrrhJmjpb1ydPdcUlqYAOqX7J0epX4xhjBaZNvRHXcWOqfQgb28yBXCJu5b6c";
+    const broadcastURL = "https://illunious.github.io/broadcast.json";
+    let cooldown = 1000;
+
+    function fetchBroadcastMessage() {
+      const timestamp = new Date().getTime();
+      fetch(`${broadcastURL}?t=${timestamp}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const broadcastElement = document.getElementById("broadcast");
+          broadcastElement.textContent = data.message || "No message at this time.";
+        })
+        .catch((error) => {
+          console.error("Error fetching broadcast message:", error);
+          document.getElementById("broadcast").textContent = "Error loading broadcast message.";
+        });
+    }
+
+    setInterval(fetchBroadcastMessage, 5000);
+    fetchBroadcastMessage();
 
     function sendMessage() {
       const messageBox = document.getElementById("messageBox");
       const sendButton = document.getElementById("sendButton");
-      const message = "<@1135751362127339580> " + messageBox.value.trim();
+      const message = messageBox.value.trim();
 
       if (!message) {
         alert("Please enter a message before sending.");
         return;
       }
 
-      // Disable the button
       sendButton.disabled = true;
 
-      // Send the message
       fetch(webhookURL, {
         method: "POST",
         headers: {
@@ -75,7 +97,7 @@
         .then((response) => {
           if (response.ok) {
             alert("Message sent successfully!");
-            messageBox.value = ""; // Clear the textbox
+            messageBox.value = "";
           } else {
             alert("Failed to send the message. Please try again.");
           }
@@ -85,7 +107,6 @@
           alert("An error occurred. Please try again.");
         })
         .finally(() => {
-          // Re enable the button
           setTimeout(() => {
             sendButton.disabled = false;
           }, cooldown);

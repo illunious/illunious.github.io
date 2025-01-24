@@ -48,8 +48,8 @@
   <button id="sendButton" onclick="sendMessage()">Send</button>
 
   <script>
-    const webhookURL = "https://discord.com/api/webhooks/1332185200817475776/xUOYxX3HrrhJmjpb1ydPdcUlqYAOqX7J0epX4xhjBaZNvRHXcWOqfQgb28yBXCJu5b6c";
-    let cooldown = 1000; // Cooldown time
+    const webhookURL = "https://discord.com/api/webhooks/1332185200817475776/xUOYxX3HrrhJmjpb1ydPdcUlqYAOqX7J0epX4xhjBaZNvRHXcWOqfQgb28yBXCJu5b6c"; // I do not care if this is public
+    let cooldown = 1000; // Cooldown
 
     function sendMessage() {
       const messageBox = document.getElementById("messageBox");
@@ -85,7 +85,7 @@
           alert("An error occurred. Please try again.");
         })
         .finally(() => {
-          // Re-enable the button
+          // Re enable the button
           setTimeout(() => {
             sendButton.disabled = false;
           }, cooldown);

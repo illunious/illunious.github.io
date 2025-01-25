@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Message Travis</title>
   <style>
+
+    @font-face {
+      font-family: 'CustomFont';
+      src: url('http://fuckyoutravis.xyz/Minecraftia-Regular.ttf') format('woff2'); 
+    }
+
     body {
       background-color: black;
       color: white;
@@ -16,14 +22,30 @@
       height: 100vh;
       margin: 0;
     }
-    h1 {
+
+    img#logo {
+      max-width: 200px;
+      height: auto;
       margin-bottom: 10px;
     }
+
     h2 {
-      font-size: 18px;
+      font-family: 'CustomFont', sans-serif;
+      font-size: 20px;
       margin-bottom: 20px;
       color: #ffcc00;
+      animation: pulse 2s infinite; 
     }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1); 
+      }
+      50% {
+        transform: scale(1.1); 
+      }
+    }
+
     input[type="text"] {
       padding: 10px;
       font-size: 16px;
@@ -32,6 +54,7 @@
       border: none;
       border-radius: 5px;
     }
+
     button {
       padding: 10px 20px;
       font-size: 16px;
@@ -41,6 +64,7 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
     button:disabled {
       background-color: #6c757d;
       cursor: not-allowed;
@@ -48,15 +72,21 @@
   </style>
 </head>
 <body>
-  <h1>Message Travis anything!</h1>
+
+  <img id="logo" src="http://fuckyoutravis.xyz/mainlogo.png" alt="Logo">
+
+
   <h2 id="broadcast">Loading broadcast message...</h2>
+
+
   <input type="text" id="messageBox" placeholder="Type your message here..." />
   <button id="sendButton" onclick="sendMessage()">Send</button>
 
   <script>
     const webhookURL = "https://discord.com/api/webhooks/1332185200817475776/xUOYxX3HrrhJmjpb1ydPdcUlqYAOqX7J0epX4xhjBaZNvRHXcWOqfQgb28yBXCJu5b6c";
     const broadcastURL = "http://fuckyoutravis.xyz/broadcast.json";
-    let cooldown = 1000;
+    let cooldown = 1000; 
+
 
     function fetchBroadcastMessage() {
       const timestamp = new Date().getTime();
@@ -72,8 +102,10 @@
         });
     }
 
-    setInterval(fetchBroadcastMessage, 5000);
-    fetchBroadcastMessage();
+
+    setInterval(fetchBroadcastMessage, 5000); 
+    fetchBroadcastMessage(); 
+
 
     function sendMessage() {
       const messageBox = document.getElementById("messageBox");
@@ -85,7 +117,9 @@
         return;
       }
 
+
       sendButton.disabled = true;
+
 
       fetch(webhookURL, {
         method: "POST",
@@ -97,7 +131,7 @@
         .then((response) => {
           if (response.ok) {
             alert("Message sent successfully!");
-            messageBox.value = "";
+            messageBox.value = ""; 
           } else {
             alert("Failed to send the message. Please try again.");
           }
@@ -107,6 +141,7 @@
           alert("An error occurred. Please try again.");
         })
         .finally(() => {
+
           setTimeout(() => {
             sendButton.disabled = false;
           }, cooldown);

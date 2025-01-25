@@ -37,16 +37,16 @@
       color: #ffcc00;
       animation: pulse 2s infinite;
       position: absolute;
-      transform: rotate(20deg) translate(50px, -30px); /* Angle and offset */
-      z-index: 10; /* Ensure it's on top of the logo */
+      transform: rotate(20deg) translate(200px, -30px); /* angle and offset */
+      z-index: 10;
     }
 
     @keyframes pulse {
       0%, 100% {
-        transform: rotate(20deg) translate(200px, -30px) scale(1); /* Match the initial transform */
+        transform: rotate(20deg) translate(50px, -30px) scale(1);
       }
       50% {
-        transform: rotate(20deg) translate(200px, -30px) scale(1.1); /* Slightly larger */
+        transform: rotate(20deg) translate(50px, -30px) scale(1.1);
       }
     }
 
@@ -76,13 +76,13 @@
   </style>
 </head>
 <body>
-  <!-- Logo -->
+
   <img id="logo" src="http://fuckyoutravis.xyz/mainlogo.png" alt="Logo">
 
-  <!-- Subheader styled like Minecraft splash text -->
+
   <h2 id="broadcast">Loading broadcast message...</h2>
 
-  <!-- Input box and send button -->
+
   <input type="text" id="messageBox" placeholder="Type your message here..." />
   <button id="sendButton" onclick="sendMessage()">Send</button>
 

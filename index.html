@@ -37,7 +37,7 @@
       color: #ffcd00;
       animation: pulse 2s infinite;
       position: absolute;
-      transform: rotate(-20deg) translate(0px, 0px); /* angle and offset */
+      transform: rotate(-20deg) translate(0px, 0px);
       z-index: 10;
     }
 
@@ -79,33 +79,29 @@
 
   <img id="logo" src="https://fuckyoutravis.xyz/mainlogo.png" alt="Logo">
 
-
   <h2 id="broadcast">Loading broadcast message...</h2>
-
 
   <input type="text" id="messageBox" placeholder="Type your message here..." />
   <button id="sendButton" onclick="sendMessage()">Send</button>
 
   <script>
-    const webhookURL = "https://discord.com/api/webhooks/1332185200817475776/xUOYxX3HrrhJmjpb1ydPdcUlqYAOqX7J0epX4xhjBaZNvRHXcWOqfQgb28yBXCJu5b6c";
-    const broadcastURL = "https://fuckyoutravis.xyz/broadcast.json";
-    let cooldown = 1000; 
+    const apiURL = "http://172.16.0.50:3000/api/sendMessage"; 
+    let cooldown = 1000;
 
     function fetchBroadcastMessage() {
       const timestamp = new Date().getTime();
-      fetch(`${broadcastURL}?t=${timestamp}`)
-        .then((response) => response.json())
-        .then((data) => {
-          const broadcastElement = document.getElementById("broadcast");
-          broadcastElement.textContent = data.message || "No message at this time.";
+      fetch("https://fuckyoutravis.xyz/broadcast.json?t=" + timestamp)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("broadcast").textContent = data.message || "No message at this time.";
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Error fetching broadcast message:", error);
           document.getElementById("broadcast").textContent = "Error loading broadcast message.";
         });
     }
 
-    setInterval(fetchBroadcastMessage, 5000); 
+    setInterval(fetchBroadcastMessage, 5000);
     fetchBroadcastMessage();
 
     function sendMessage() {
@@ -120,30 +116,35 @@
 
       sendButton.disabled = true;
 
-      fetch(webhookURL, {
+      fetch(apiURL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ content: message })
+        body: JSON.stringify({ message })
       })
-        .then((response) => {
-          if (response.ok) {
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          if (data.censored) {
             alert("Message sent successfully!");
-            messageBox.value = ""; 
           } else {
-            alert("Failed to send the message. Please try again.");
+            alert("Message sent successfully!");
           }
-        })
-        .catch((error) => {
-          console.error("Error sending message:", error);
-          alert("An error occurred. Please try again.");
-        })
-        .finally(() => {
-          setTimeout(() => {
-            sendButton.disabled = false;
-          }, cooldown);
-        });
+          messageBox.value = "";
+        } else {
+          alert("Failed to send message.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+      })
+      .finally(() => {
+        setTimeout(() => {
+          sendButton.disabled = false;
+        }, cooldown);
+      });
     }
   </script>
 </body>
